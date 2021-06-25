@@ -1,17 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bottom_sheet_bg"
     android:id="@+id/bottom_sheet"
     android:padding="20dp">
 
     <TextView
+        android:id="@+id/translate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/bottom_sheet"
+        app:layout_constraintTop_toTopOf="@id/bottom_sheet"
+        app:layout_constraintEnd_toStartOf="@id/speak"
+        android:drawableStart="@drawable/ic_translate"
+        android:background="@drawable/translate_bg"
+        android:text="Translate"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="30dp"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:elevation="20dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <ImageButton
+        android:id="@+id/speak"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:foreground="@drawable/ic_speak"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/bottom_sheet"
+        app:layout_constraintTop_toTopOf="@id/bottom_sheet"/>
+
+    <EditText
         android:id="@+id/modal_textView"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:textSize="18dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:background="@drawable/textfield_input"
+        app:layout_constraintTop_toBottomOf="@id/speak"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

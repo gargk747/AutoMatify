@@ -13,6 +13,7 @@ import androidx.core.content.FileProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,11 +24,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +40,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -46,6 +50,7 @@ import com.google.mlkit.vision.text.TextRecognizerOptions;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     TextView helperText;
     String currentPhotoPath = null;
     BottomSheetDialog bottomSheetDialog;
+    TextToSpeech textToSpeech;
 
     //Uri photoUri;
     @Override
@@ -65,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
         imageView1=findViewById(R.id.imageView1);
         helperText=findViewById(R.id.helperText);
         ocr=findViewById(R.id.ocr);
+
+        textToSpeech=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
+
         retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,8 +196,22 @@ public class MainActivity extends AppCompatActivity {
 
         bottomSheetDialog=new BottomSheetDialog(MainActivity.this,R.style.BottomSheetTheme);
         View sheetView= LayoutInflater.from(getApplicationContext()).inflate(R.layout.bottom_sheet_layout,(ViewGroup)findViewById(R.id.bottom_sheet));
-        TextView modal_textView=sheetView.findViewById(R.id.modal_textView);
+        EditText modal_textView=sheetView.findViewById(R.id.modal_textView);
+        ImageButton speak=sheetView.findViewById(R.id.speak);
         modal_textView.setText(resultText);
+        speak.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textToSpeech.speak(modal_textView.getText(),TextToSpeech.QUEUE_FLUSH,null,null);
+            }
+        });
+
+        bottomSheetDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                textToSpeech.stop();
+            }
+        });
         bottomSheetDialog.setContentView(sheetView);
         bottomSheetDialog.show();
     }
