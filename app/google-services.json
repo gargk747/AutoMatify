@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "384760775091",
+    "project_id": "automatify-7c85b",
+    "storage_bucket": "automatify-7c85b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384760775091:android:7cd9b8ee7fd2e2cd5dcbc6",
+        "android_client_info": {
+          "package_name": "com.example.automatify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "384760775091-ktsp2j98d7p6uub8imbqat4q042lb0bb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5OtSk0iG8jXeDffdYMz8deO67H28qOoA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "384760775091-ktsp2j98d7p6uub8imbqat4q042lb0bb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

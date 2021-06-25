@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +17,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,15 +26,29 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.TextRecognizerOptions;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView imageView;
-    Button retake;
+    ImageView imageView,imageView1;
+    ImageButton retake;
+    TextView helperText;
     String currentPhotoPath = null;
 
     //Uri photoUri;
@@ -41,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imageView=findViewById(R.id.imageView);
         retake=findViewById(R.id.retake);
-
+        imageView1=findViewById(R.id.imageView1);
+        helperText=findViewById(R.id.helperText);
         retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,11 +104,70 @@ public class MainActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         // There are no request codes
-                        Bitmap bitmap= BitmapFactory.decodeFile(currentPhotoPath);
+                        ExifInterface exif = null;
+                        try {
+                            exif = new ExifInterface(currentPhotoPath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        int orientation = exif.getAttributeInt(
+                                ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_NORMAL);
+
+                        int angle = 0;
+
+                        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                            angle = 90;
+                        } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                            angle = 180;
+                        } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                            angle = 270;
+                        }
+
+                        Matrix mat = new Matrix();
+                        mat.postRotate(angle);
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = 2;
+
+                        Bitmap bmp = BitmapFactory.decodeFile(currentPhotoPath,
+                                options);
+                        Bitmap bitmap = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
+                                bmp.getHeight(), mat, true);
+                        ByteArrayOutputStream outstudentstreamOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100,
+                                outstudentstreamOutputStream);
                         imageView.setImageBitmap(bitmap);
+                        helperText.setVisibility(View.INVISIBLE);
+                        imageView1.setVisibility(View.INVISIBLE);
+                        imageView.setVisibility(View.VISIBLE);
+                        ImageToText(bitmap);
                     }
                 }
             });
+
+    private void ImageToText(Bitmap bitmap) {
+        InputImage image = InputImage.fromBitmap(bitmap,0);
+        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+        Task<Text> result=recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(@NonNull Text text) {
+                Toast.makeText(MainActivity.this, "Successfull", Toast.LENGTH_SHORT).show();
+                Log.d("TESTING"," "+text.getText());
+                String resultText = text.getText();
+                showModalBottom(resultText);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MainActivity.this, "Unsuccessfull", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void showModalBottom(String resultText) {
+
+    }
 
     private File createImageFile() throws IOException {
 
