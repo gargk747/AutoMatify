@@ -1,2 +1,2 @@
-# AutoMatify
-Automate Identification and Recognition of Text from an Image, Text translation and Text to Speech in different Languages. 
+<img src="https://github.com/gargk747/AutoMatify/blob/main/assets/banner.png">
+
