@@ -1,3 +1,65 @@
 <resources>
     <string name="app_name">Automatify</string>
+
+    <string-array name="Languages">
+        <item>AFRIKAANS</item>
+        <item>ARABIC</item>
+        <item>BENGALI</item>
+        <item>CHINESE</item>
+        <item>CHINESE_SIMPLIFIED</item>
+        <item>CHINESE_TRADITIONAL</item>
+        <item>DUTCH</item>
+        <item>ENGLISH</item>
+        <item>FILIPINO</item>
+        <item>FRENCH</item>
+        <item>GERMAN</item>
+        <item>GUJARATI</item>
+        <item>HINDI</item>
+        <item>ITALIAN</item>
+        <item>JAPANESE</item>
+        <item>KANNADA</item>
+        <item>KOREAN</item>
+        <item>LATIN</item>
+        <item>PORTUGUESE</item>
+        <item>RUSSIAN</item>
+        <item>SPANISH</item>
+        <item>SWEDISH</item>
+        <item>TAMIL</item>
+        <item>TELUGU</item>
+        <item>THAI</item>
+        <item>TURKISH</item>
+        <item>URDU</item>
+        <item>VIETNAMESE</item>
+    </string-array>
+
+    <string-array name="LanguagesCodes">
+        <item>af</item>
+        <item>ar</item>
+        <item>bn</item>
+        <item>zh-CN</item>
+        <item>zh-CN</item>
+        <item>zh-TW</item>
+        <item>nl</item>
+        <item>en</item>
+        <item>tl</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>gu</item>
+        <item>hi</item>
+        <item>it</item>
+        <item>ja</item>
+        <item>kn</item>
+        <item>ko</item>
+        <item>la</item>
+        <item>pt</item>
+        <item>ru</item>
+        <item>es</item>
+        <item>sv</item>
+        <item>ta</item>
+        <item>te</item>
+        <item>th</item>
+        <item>tr</item>
+        <item>ur</item>
+        <item>vi</item>
+    </string-array>
 </resources>

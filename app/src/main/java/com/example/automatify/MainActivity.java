@@ -212,6 +212,18 @@ public class MainActivity extends AppCompatActivity {
                 textToSpeech.stop();
             }
         });
+        TextView translate =sheetView.findViewById(R.id.translate);
+        translate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textToSpeech.stop();
+                Log.d("CHECK",modal_textView.getText().toString());
+                Intent intent= new Intent(MainActivity.this,TranslatorActivity.class);
+                intent.putExtra("Text",modal_textView.getText().toString());
+                startActivity(intent);
+            }
+        });
+
         bottomSheetDialog.setContentView(sheetView);
         bottomSheetDialog.show();
     }
