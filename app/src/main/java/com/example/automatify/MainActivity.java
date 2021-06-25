@@ -24,7 +24,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +36,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -47,9 +50,10 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     ImageView imageView,imageView1;
-    ImageButton retake;
+    ImageButton retake,ocr;
     TextView helperText;
     String currentPhotoPath = null;
+    BottomSheetDialog bottomSheetDialog;
 
     //Uri photoUri;
     @Override
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         retake=findViewById(R.id.retake);
         imageView1=findViewById(R.id.imageView1);
         helperText=findViewById(R.id.helperText);
+        ocr=findViewById(R.id.ocr);
         retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
                         imageView1.setVisibility(View.INVISIBLE);
                         imageView.setVisibility(View.VISIBLE);
                         ImageToText(bitmap);
+                        ocr.setVisibility(View.VISIBLE);
+                        ocr.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ImageToText(bitmap);
+                            }
+                        });
                     }
                 }
             });
@@ -151,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         Task<Text> result=recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
             @Override
             public void onSuccess(@NonNull Text text) {
-                Toast.makeText(MainActivity.this, "Successfull", Toast.LENGTH_SHORT).show();
                 Log.d("TESTING"," "+text.getText());
                 String resultText = text.getText();
                 showModalBottom(resultText);
@@ -159,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Unsuccessfull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Unable to Convert Image to Text", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -167,6 +178,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void showModalBottom(String resultText) {
 
+        bottomSheetDialog=new BottomSheetDialog(MainActivity.this,R.style.BottomSheetTheme);
+        View sheetView= LayoutInflater.from(getApplicationContext()).inflate(R.layout.bottom_sheet_layout,(ViewGroup)findViewById(R.id.bottom_sheet));
+        TextView modal_textView=sheetView.findViewById(R.id.modal_textView);
+        modal_textView.setText(resultText);
+        bottomSheetDialog.setContentView(sheetView);
+        bottomSheetDialog.show();
     }
 
     private File createImageFile() throws IOException {
